@@ -29,6 +29,10 @@ jobs:
         aws-region: us-east-1
         role-session-name: github-action-aws-sts-session
 
+    - name: Terraform Init
+      working-directory: ./terraform
+      id: init
+      run: terraform init
 
 
     - name: Terraform Destroy
