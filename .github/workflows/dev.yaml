@@ -5,14 +5,7 @@ on:
     branches:
       - 'development'
   pull_request:
-  workflow_dispatch:
-    inputs:
-      action:
-        description: 'Terraform Action to Perform'
-        type: choice
-        options:
-        - Terraform_apply
-        - Terraform_destroy
+
 
 jobs:
   terraform_plan:
@@ -97,31 +90,4 @@ jobs:
       if: github.ref == 'refs/heads/development' && github.event_name == 'push'
       run: terraform apply -auto-approve -input=false
 
-  terraform_destroy:
-    name: 'Terraform-Destroy'
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-      id-token: write
-      contents: read
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        role-to-assume: ${{secrets.AWS_STS_ROLE_ARN}}
-        aws-region: us-east-1
-        role-session-name: github-action-aws-sts-session
-
-
-
-    - name: Terraform Destroy
-      working-directory: ./terraform
-      id: destroy
-      if: ${{ github.event.inputs.action == 'terraform_destroy' }}
-      run: terraform destroy -no-color -input=false
-
-
+  
