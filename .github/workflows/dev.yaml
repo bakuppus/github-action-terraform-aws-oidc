@@ -50,6 +50,7 @@ jobs:
       continue-on-error: true
 
     - name: Update Pull Request
+      working-directory: ./terraform
       uses: actions/github-script@v6
       if: github.event_name == 'pull_request'
       env:
@@ -80,9 +81,11 @@ jobs:
           })
 
     - name: Terraform Plan Status
+      working-directory: ./terraform
       if: steps.plan.outcome == 'failure'
       run: exit 1
 
     - name: Terraform Apply
+      working-directory: ./terraform
       if: github.ref == 'refs/heads/development' && github.event_name == 'push'
       run: terraform apply -auto-approve -input=false
